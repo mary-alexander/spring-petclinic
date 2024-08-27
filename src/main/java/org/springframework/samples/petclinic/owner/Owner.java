@@ -30,8 +30,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -47,16 +47,16 @@ import jakarta.validation.constraints.NotBlank;
 public class Owner extends Person {
 
 	@Column(name = "address")
-	@NotBlank
+	@NotEmpty
 	private String address;
 
 	@Column(name = "city")
-	@NotBlank
+	@NotEmpty
 	private String city;
 
 	@Column(name = "telephone")
-	@NotBlank
-	@Pattern(regexp = "\\d{10}", message = "Telephone must be a 10-digit number")
+	@NotEmpty
+	@Digits(fraction = 0, integer = 10)
 	private String telephone;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -132,9 +132,10 @@ public class Owner extends Person {
 	public Pet getPet(String name, boolean ignoreNew) {
 		name = name.toLowerCase();
 		for (Pet pet : getPets()) {
-			String compName = pet.getName();
-			if (compName != null && compName.equalsIgnoreCase(name)) {
-				if (!ignoreNew || !pet.isNew()) {
+			if (!ignoreNew || !pet.isNew()) {
+				String compName = pet.getName();
+				compName = compName == null ? "" : compName.toLowerCase();
+				if (compName.equals(name)) {
 					return pet;
 				}
 			}
