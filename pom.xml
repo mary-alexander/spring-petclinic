@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.samples</groupId>
   <artifactId>spring-petclinic</artifactId>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.2</version>
+    <version>3.0.6</version>
   </parent>
   <name>petclinic</name>
 
@@ -24,16 +22,12 @@
     <project.build.outputTimestamp>2023-05-10T07:42:50Z</project.build.outputTimestamp>
 
     <!-- Web dependencies -->
-    <webjars-bootstrap.version>5.3.3</webjars-bootstrap.version>
+    <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
     <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
 
-    <checkstyle.version>10.16.0</checkstyle.version>
-    <jacoco.version>0.8.12</jacoco.version>
-    <libsass.version>0.2.29</libsass.version>
-    <lifecycle-mapping>1.0.0</lifecycle-mapping>
-    <maven-checkstyle.version>3.3.1</maven-checkstyle.version>
+    <jacoco.version>0.8.8</jacoco.version>
     <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
-    <spring-format.version>0.0.41</spring-format.version>
+    <spring-format.version>0.0.38</spring-format.version>
 
   </properties>
 
@@ -86,7 +80,7 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- Caching -->
+    <!-- caching -->
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
@@ -96,7 +90,7 @@
       <artifactId>caffeine</artifactId>
     </dependency>
 
-    <!-- Webjars -->
+    <!-- webjars -->
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>bootstrap</artifactId>
@@ -107,31 +101,12 @@
       <artifactId>font-awesome</artifactId>
       <version>${webjars-font-awesome.version}</version>
     </dependency>
+    <!-- end of webjars -->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-testcontainers</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-docker-compose</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>mysql</artifactId>
-      <scope>test</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -143,27 +118,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>enforce-java</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <message>This build requires at least Java ${java.version}, update your JVM, and
-                    run the build again</message>
-                  <version>${java.version}</version>
-                </requireJavaVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>io.spring.javaformat</groupId>
         <artifactId>spring-javaformat-maven-plugin</artifactId>
@@ -179,13 +133,33 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <message>This build requires at least Java ${java.version}, update your JVM, and run the build again</message>
+                  <version>${java.version}</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle.version}</version>
+        <version>3.2.1</version>
         <dependencies>
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>${checkstyle.version}</version>
+            <version>10.8.1</version>
           </dependency>
           <dependency>
             <groupId>io.spring.nohttp</groupId>
@@ -199,12 +173,11 @@
             <phase>validate</phase>
             <configuration>
               <configLocation>src/checkstyle/nohttp-checkstyle.xml</configLocation>
+              <suppressionsLocation>src/checkstyle/nohttp-checkstyle-suppressions.xml</suppressionsLocation>
+              <encoding>UTF-8</encoding>
               <sourceDirectories>${basedir}</sourceDirectories>
               <includes>**/*</includes>
               <excludes>**/.git/**/*,**/.idea/**/*,**/target/**/,**/.flattened-pom.xml,**/*.class</excludes>
-              <propertyExpansion>
-                config_loc=${basedir}/src/checkstyle/
-              </propertyExpansion>
             </configuration>
             <goals>
               <goal>check</goal>
@@ -230,8 +203,8 @@
               <additionalProperties>
                 <encoding.source>${project.build.sourceEncoding}</encoding.source>
                 <encoding.reporting>${project.reporting.outputEncoding}</encoding.reporting>
-                <java.source>${java.version}</java.source>
-                <java.target>${java.version}</java.target>
+                <java.source>${maven.compiler.source}</java.source>
+                <java.target>${maven.compiler.target}</java.target>
               </additionalProperties>
             </configuration>
           </execution>
@@ -257,8 +230,8 @@
         </executions>
       </plugin>
 
-      <!-- Spring Boot Actuator displays build-related information if a git.properties file is
-      present at the classpath -->
+      <!-- Spring Boot Actuator displays build-related information if a git.properties
+        file is present at the classpath -->
       <plugin>
         <groupId>io.github.git-commit-id</groupId>
         <artifactId>git-commit-id-maven-plugin</artifactId>
@@ -266,12 +239,6 @@
           <failOnNoGitDirectory>false</failOnNoGitDirectory>
           <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
         </configuration>
-      </plugin>
-      <!-- Spring Boot Actuator displays sbom-related information if a CycloneDX SBOM file is
-      present at the classpath -->
-      <plugin>
-        <groupId>org.cyclonedx</groupId>
-        <artifactId>cyclonedx-maven-plugin</artifactId>
       </plugin>
 
     </plugins>
@@ -355,7 +322,7 @@
           <plugin>
             <groupId>com.gitlab.haynes</groupId>
             <artifactId>libsass-maven-plugin</artifactId>
-            <version>${libsass.version}</version>
+            <version>0.2.29</version>
             <executions>
               <execution>
                 <phase>generate-resources</phase>
@@ -368,8 +335,7 @@
             <configuration>
               <inputPath>${basedir}/src/main/scss/</inputPath>
               <outputPath>${basedir}/src/main/resources/static/resources/css/</outputPath>
-              <includePath>
-                ${project.build.directory}/webjars/META-INF/resources/webjars/bootstrap/${webjars-bootstrap.version}/scss/</includePath>
+              <includePath>${project.build.directory}/webjars/META-INF/resources/webjars/bootstrap/${webjars-bootstrap.version}/scss/</includePath>
             </configuration>
           </plugin>
         </plugins>
@@ -386,11 +352,11 @@
         <pluginManagement>
           <plugins>
             <!-- This plugin's configuration is used to store Eclipse m2e settings
-              only. It has no influence on the Maven build itself. -->
+   only. It has no influence on the Maven build itself. -->
             <plugin>
               <groupId>org.eclipse.m2e</groupId>
               <artifactId>lifecycle-mapping</artifactId>
-              <version>${lifecycle-mapping}</version>
+              <version>1.0.0</version>
               <configuration>
                 <lifecycleMappingMetadata>
                   <pluginExecutions>
